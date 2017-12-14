@@ -60,7 +60,8 @@ function extend (Y /* :any */) {
                 name: key,
                 object: this,
                 type: 'add',
-                value: value
+                value: value,
+                op
               })
             } else {
               Y.utils.bubbleEvent(this, {
@@ -68,7 +69,8 @@ function extend (Y /* :any */) {
                 object: this,
                 oldValue: oldValue,
                 type: 'update',
-                value: value
+                value: value,
+                op
               })
             }
           }
@@ -80,7 +82,8 @@ function extend (Y /* :any */) {
               name: key,
               object: this,
               oldValue: oldValue,
-              type: 'delete'
+              type: 'delete',
+              op
             })
           }
         } else {
@@ -293,6 +296,9 @@ function extend (Y /* :any */) {
         }
       } else if (op.opContent != null) {
         yield* transaction.store.initType.call(transaction, op.opContent)
+      }
+      if(transaction._opts) {
+        op.sender = transaction._opts.sender
       }
       this.eventHandler.receivedOp(op)
     }
